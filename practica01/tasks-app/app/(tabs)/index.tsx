@@ -5,6 +5,13 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+import { useEffect } from 'react';
+import { testConnection } from '../supabaseClient';
+
+useEffect(() => {
+  testConnection(); // Llama a la prueba de conexión al cargar la app
+}, []);
+
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
