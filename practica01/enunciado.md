@@ -24,3 +24,8 @@ Tabla: `tasks`
 
 - Implementar paginación para la lista de tareas.
 - Filtrar tareas por completadas/no completadas.
+
+---
+
+- Pasos guiados en [guia](./guia/)
+- Proyecto final en [tasks-app](./tasks-app/)
