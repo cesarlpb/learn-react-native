@@ -5,6 +5,7 @@ import { supabase } from '../app/supabaseClient';
 interface Task {
   id: number;
   title: string;
+  description: string;
   completed: boolean;
 }
 
@@ -22,6 +23,19 @@ const TaskList: React.FC<TaskListProps> = ({ reload }) => {
       .select('*')
       .order('id', { ascending: false });
     if (!error && data) setTasks(data as Task[]); // Cast explícito de Task
+  };
+
+  // Función para marcar como completado
+  const markAsCompleted = async (id: number) => {
+    const { error } = await supabase.from('tasks').update({ completed: true }).eq('id', id);
+    if (!error) {
+      // Actualiza el estado local de la tarea
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === id ? { ...task, completed: true } : task))
+      );
+    } else {
+      console.error('Error al marcar como completado:', error);
+    }
   };
 
   // Función para borrar una tarea
@@ -70,7 +84,20 @@ const TaskList: React.FC<TaskListProps> = ({ reload }) => {
           }}
         >
           <span>
-            {task.title} - {task.completed ? '✅' : '❌'}
+          <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => markAsCompleted(task.id)} // Llama a la función de completar
+              style={{
+                marginRight: '10px',
+                cursor: task.completed ? 'default' : 'pointer',
+              }}
+              disabled={task.completed} // Deshabilitar el checkbox si ya está completado
+            />
+            <span style={{display: 'inline-block', fontWeight: 'bold', fontFamily: 'monospace', fontSize: '1.1rem', minWidth: '125px', width: '125px'}}>
+              {task.title}:
+              </span> 
+              <span style={{fontSize: '1rem', fontFamily: 'sans-serif', marginLeft: '1rem'}}>{task.description}</span>
           </span>
           <button
             onClick={() => deleteTask(task.id)} // Llama a deleteTask con el ID de la tarea
