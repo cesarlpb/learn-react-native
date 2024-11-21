@@ -19,7 +19,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSave }) => {
     let userId = (await user).data.user?.id;
 
     if (!userId){
-      userId = "<inserta_id_de_pruebas_aquí>"; // id de usuario de prueba
+      // id de usuario de prueba:
+      userId = `${process.env.EXPO_PUBLIC_ID_PRUEBAS}`;
     }
 
     const { error } = await supabase.
