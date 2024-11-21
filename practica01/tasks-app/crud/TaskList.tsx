@@ -8,20 +8,31 @@ interface Task {
   completed: boolean;
 }
 
-const TaskList = () => {
+interface TaskListProps {
+  reload: boolean; // Propiedad que indica cuándo recargar
+}
+
+const TaskList: React.FC<TaskListProps> = ({ reload }) => {
+
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .order('id', { ascending: false });
-      if (!error && data) setTasks(data as Task[]); // Cast explícito de Task
-    };
+  const fetchTasks = async () => {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .order('id', { ascending: false });
+    if (!error && data) setTasks(data as Task[]); // Cast explícito de Task
+  };
 
-    fetchTasks();
+  useEffect(() => {
+    fetchTasks(); // Carga inicial
   }, []);
+
+  useEffect(() => {
+    if (reload) {
+      fetchTasks(); // Recarga cuando `reload` cambia
+    }
+  }, [reload]);
 
   return (
     <ul style={{color: 'white', textTransform: 'capitalize'}}>

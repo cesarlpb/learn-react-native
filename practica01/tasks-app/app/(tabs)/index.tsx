@@ -5,14 +5,34 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { testConnection } from '../supabaseClient';
+import TaskList from '@/crud/TaskList';
+import TaskForm from '@/crud/TaskForm';
 
-useEffect(() => {
-  testConnection(); // Llama a la prueba de conexión al cargar la app
-}, []);
+// useEffect(() => {
+//   testConnection(); // Llama a la prueba de conexión al cargar la app
+// }, []);
+
+import { supabase } from '../supabaseClient';
+
+// Define el tipo de las tareas
+interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
 export default function HomeScreen() {
+
+  const [reload, setReload] = useState(false); // Estado que controla cuándo recargar
+
+  const handleSave = () => {
+    console.log('Tarea guardada');
+    // Recargar tareas:
+    setReload((prev) => !prev); // Cambia el estado para forzar la recarga
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -23,40 +43,13 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Bienvenid@ a Tasks-App!</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+
+      <TaskList reload={reload} />
+      <TaskForm onSave={handleSave} />
+
     </ParallaxScrollView>
   );
 }
@@ -77,5 +70,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
-  },
+  }
 });
