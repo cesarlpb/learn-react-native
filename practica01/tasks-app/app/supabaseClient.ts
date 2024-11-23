@@ -7,7 +7,7 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
   throw new Error('Las variables de entorno SUPABASE_URL y SUPABASE_KEY deben estar definidas.');
 }
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Prueba de conexión
 export const testConnection = async () => {
@@ -22,3 +22,5 @@ export const testConnection = async () => {
     console.error('Error inesperado:', err);
   }
 };
+
+export default supabase;
