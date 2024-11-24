@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import supabase from '@app/supabaseClient';
+import supabase from '../app/supabaseClient';
+import TaskForm from './TaskForm';
 
-// Define el tipo de las tareas
 interface Task {
   id: number;
   title: string;
@@ -10,12 +10,9 @@ interface Task {
   completed: boolean;
 }
 
-interface TaskListProps {
-  reload: boolean; // Propiedad que indica cuándo recargar
-}
-
-const TaskList: React.FC<TaskListProps> = ({ reload }) => {
+const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [editingTask, setEditingTask] = useState<Task | null>(null); // Estado para manejar la edición
 
   const fetchTasks = async () => {
     const { data, error } = await supabase
@@ -25,14 +22,38 @@ const TaskList: React.FC<TaskListProps> = ({ reload }) => {
     if (!error && data) setTasks(data as Task[]);
   };
 
-  const markAsCompleted = async (id: number) => {
-    const { error } = await supabase.from('tasks').update({ completed: true }).eq('id', id);
+  const toggleTaskCompletion = async (taskId: number, currentStatus: boolean) => {
+    const { error } = await supabase
+      .from('tasks')
+      .update({ completed: !currentStatus })
+      .eq('id', taskId);
+
     if (!error) {
       setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === id ? { ...task, completed: true } : task))
+        prevTasks.map((task) =>
+          task.id === taskId ? { ...task, completed: !currentStatus } : task
+        )
       );
     } else {
-      console.error('Error al marcar como completado:', error);
+      console.error('Error al cambiar el estado de completado:', error);
+    }
+  };
+
+  const saveTask = async (task: Task) => {
+    const { error } = await supabase
+      .from('tasks')
+      .update({
+        title: task.title,
+        description: task.description,
+        completed: task.completed,
+      })
+      .eq('id', task.id);
+
+    if (!error) {
+      setTasks((prevTasks) =>
+        prevTasks.map((t) => (t.id === task.id ? { ...t, ...task } : t))
+      );
+      setEditingTask(null); // Salir del modo de edición
     }
   };
 
@@ -49,45 +70,57 @@ const TaskList: React.FC<TaskListProps> = ({ reload }) => {
     fetchTasks();
   }, []);
 
-  useEffect(() => {
-    if (reload) {
-      fetchTasks();
-    }
-  }, [reload]);
-
   return (
-    <FlatList
-  data={tasks}
-  keyExtractor={(item) => item.id.toString()}
-  renderItem={({ item }) => (
-    <View style={styles.taskItem}>
-      <Text style={styles.taskText}>
-        {item.title}: {item.description}
-      </Text>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, item.completed ? styles.completedButton : styles.markButton]}
-          onPress={() => markAsCompleted(item.id)}
-          disabled={item.completed}
-        >
-          <Text style={styles.buttonText}>
-            {item.completed ? 'Completado' : 'Completar'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.deleteButton]}
-          onPress={() => deleteTask(item.id)}
-        >
-          <Text style={styles.buttonText}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+    <View>
+      {editingTask ? (
+        <TaskForm
+          task={editingTask}
+          onSave={(updatedTask) => {
+            saveTask(updatedTask);
+          }}
+          onCancel={() => setEditingTask(null)}
+        />
+      ) : (
+        <FlatList
+          data={tasks}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.taskItem}>
+              <Text style={styles.taskText}>
+                {item.title} - {item.description}
+              </Text>
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.toggleButton,
+                    item.completed ? styles.completedButton : styles.uncompletedButton,
+                  ]}
+                  onPress={() => toggleTaskCompletion(item.id, item.completed)}
+                >
+                  <Text style={styles.buttonText}>
+                    {item.completed ? '❌ Desmarcar Completado' : '✅ Marcar Completado'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => setEditingTask(item)} // Selecciona la tarea para editar
+                >
+                  <Text style={styles.buttonText}>Editar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => deleteTask(item.id)}
+                >
+                  <Text style={styles.buttonText}>Eliminar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      )}
     </View>
-  )}
-  nestedScrollEnabled={true}
-  contentContainerStyle={{ paddingBottom: 20 }}
-/>
-
-  );  
+  );
 };
 
 const styles = StyleSheet.create({
@@ -106,20 +139,29 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
-  button: {
+  toggleButton: {
     padding: 10,
     borderRadius: 5,
-  },
-  markButton: {
-    backgroundColor: 'green',
+    marginRight: 10,
   },
   completedButton: {
+    backgroundColor: 'green',
+  },
+  uncompletedButton: {
     backgroundColor: 'gray',
+  },
+  editButton: {
+    backgroundColor: '#f59e0b',
+    padding: 10,
+    borderRadius: 5,
+    marginRight: 10,
   },
   deleteButton: {
     backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
   },
   buttonText: {
     color: 'white',

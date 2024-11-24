@@ -2,64 +2,55 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import supabase from '@app/supabaseClient';
 
-interface TaskFormProps {
-  onSave: () => void;
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSave }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+interface TaskFormProps {
+  task: Task;
+  onSave: (task: Task) => void;
+  onCancel: () => void;
+}
 
-  const handleSubmit = async () => {
-    console.log('Datos del form:');
-    console.log(title);
-    console.log(description);
+const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
+  const [title, setTitle] = useState(task?.title || ''); // Valor inicial desde la tarea existente
+  const [description, setDescription] = useState(task?.description || ''); // Valor inicial desde la tarea existente
 
-    const user = supabase.auth.getUser();
-    let userId = (await user).data.user?.id;
-
-    if (!userId) {
-      // ID de usuario de prueba:
-      userId = `${process.env.EXPO_PUBLIC_ID_PRUEBAS}`;
-    }
-
-    const { error } = await supabase
-      .from('tasks')
-      .insert([
-        {
-          title: title.trim(),
-          description: description.trim(),
-          user_id: userId,
-        },
-      ]);
-
-    if (!error) onSave();
+  const handleSubmit = () => {
+    // Construye el objeto updatedTask combinando la tarea existente con los valores actuales
+    const updatedTask = { ...task, title, description };
+    onSave(updatedTask); // Llama a onSave pasando el objeto actualizado
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Nueva Tarea</Text>
+      <Text style={styles.title}>Editar Tarea</Text>
       <TextInput
         style={styles.input}
+        value={title}
+        onChangeText={setTitle} // Actualiza el estado local
         placeholder="Título"
         placeholderTextColor="#ccc"
-        value={title}
-        onChangeText={setTitle}
       />
       <TextInput
         style={[styles.input, styles.textarea]}
+        value={description}
+        onChangeText={setDescription} // Actualiza el estado local
         placeholder="Descripción"
         placeholderTextColor="#ccc"
-        value={description}
-        onChangeText={setDescription}
         multiline
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      {onCancel && (
+        <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onCancel}>
+          <Text style={styles.buttonText}>Cancelar</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -67,9 +58,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSave }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: 400,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#121212', // Fondo oscuro para distinguir el modo de edición
+    borderRadius: 10,
+    marginVertical: 20,
+    marginHorizontal: 'auto',
   },
   title: {
     fontSize: 24,
@@ -98,6 +94,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#007bff',
     borderRadius: 5,
     alignItems: 'center',
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#d9534f', // Color rojo para el botón de cancelar
   },
   buttonText: {
     color: 'white',
