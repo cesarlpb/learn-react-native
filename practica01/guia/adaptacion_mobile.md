@@ -56,6 +56,8 @@ en el proyecto de React Native con el objetivo de hacer el proyecto multi-platfo
   </View>
   ```
 
+Tienes una lista de los componentes más usados en [Tabla de Componentes Mobile](./tabla_componentes_mobile.md).
+
 ## 3. Uso de componentes nativos
 
 - **`<SectionList>`**:
