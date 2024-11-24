@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import supabase from '../app/supabaseClient';
+import supabase from '@app/supabaseClient';
 import TaskForm from './TaskForm';
 
 interface Task {
@@ -10,7 +10,11 @@ interface Task {
   completed: boolean;
 }
 
-const TaskList = () => {
+interface TaskListProps {
+  reload: boolean; // Asegúrate de que `reload` esté definido
+}
+
+const TaskList: React.FC<TaskListProps> = ({ reload }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null); // Estado para manejar la edición
 
@@ -20,6 +24,8 @@ const TaskList = () => {
       .select('*')
       .order('id', { ascending: false });
     if (!error && data) setTasks(data as Task[]);
+
+    console.log(data)
   };
 
   const toggleTaskCompletion = async (taskId: number, currentStatus: boolean) => {
@@ -39,21 +45,61 @@ const TaskList = () => {
     }
   };
 
-  const saveTask = async (task: Task) => {
-    const { error } = await supabase
-      .from('tasks')
-      .update({
-        title: task.title,
-        description: task.description,
-        completed: task.completed,
-      })
-      .eq('id', task.id);
-
-    if (!error) {
-      setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id === task.id ? { ...t, ...task } : t))
-      );
-      setEditingTask(null); // Salir del modo de edición
+  const saveOrUpdateTask = async (task: Task) => {
+    
+    // Lee el UUID de prueba desde .env:
+    const userId = `${process.env.EXPO_PUBLIC_ID_PRUEBAS}`;
+  
+    try {
+      let data;
+      let error;
+  
+      if (task.id) {
+        console.log("update");
+        // Si existe un ID, actualiza la tarea
+        ({ data, error } = await supabase
+          .from('tasks')
+          .update({
+            title: task.title,
+            description: task.description,
+            completed: task.completed,
+            user_id: userId, // Incluye el user_id de prueba
+          })
+          .eq('id', task.id)
+          .select());
+      } else {
+        console.log("insert");
+        // Si no hay ID, crea una nueva tarea
+        ({ data, error } = await supabase
+          .from('tasks')
+          .insert([
+            {
+              title: task.title,
+              description: task.description,
+              // completed: false, // Por defecto no está completada
+              user_id: userId, // Incluye el user_id de prueba
+            },
+          ])
+          .select());
+      }
+  
+      if (error) {
+        console.error('Error al guardar la tarea:', error);
+        return;
+      }
+  
+      if (data && data.length > 0) {
+        console.log('Tarea guardada:', data[0]);
+        // Actualiza el estado local
+        setTasks((prevTasks) =>
+          task.id
+            ? prevTasks.map((t) => (t.id === task.id ? { ...t, ...data[0] } : t)) // Actualización
+            : [...prevTasks, data[0]] // Inserción
+        );
+        setEditingTask(null); // Salir del modo de edición
+      }
+    } catch (err) {
+      console.error('Error inesperado al guardar la tarea:', err);
     }
   };
 
@@ -66,9 +112,17 @@ const TaskList = () => {
     }
   };
 
+  // Actualizar la lista de tareas al cargar componente:
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  // Actualización de tareas condicional con flag reload:
+  useEffect(() => {
+    if (reload) {
+      fetchTasks(); // Recarga las tareas cuando cambia `reload`
+    }
+  }, [reload]);
 
   return (
     <View>
@@ -76,7 +130,7 @@ const TaskList = () => {
         <TaskForm
           task={editingTask}
           onSave={(updatedTask) => {
-            saveTask(updatedTask);
+            saveOrUpdateTask(updatedTask);
           }}
           onCancel={() => setEditingTask(null)}
         />

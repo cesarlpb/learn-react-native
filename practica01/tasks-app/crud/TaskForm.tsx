@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import supabase from '@app/supabaseClient';
 
 interface Task {
   id: number;
@@ -10,7 +9,7 @@ interface Task {
 }
 
 interface TaskFormProps {
-  task: Task;
+  task?: Task; // Ahora es opcional
   onSave: (task: Task) => void;
   onCancel: () => void;
 }
@@ -22,12 +21,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
   const handleSubmit = () => {
     // Construye el objeto updatedTask combinando la tarea existente con los valores actuales
     const updatedTask = { ...task, title, description };
+    console.log('form:', updatedTask);
     onSave(updatedTask); // Llama a onSave pasando el objeto actualizado
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Editar Tarea</Text>
+      {/* Cambia el título dinámicamente según si es creación o edición */}
+      <Text style={styles.title}>{task ? 'Editar Tarea' : 'Crear Tarea'}</Text>
       <TextInput
         style={styles.input}
         value={title}
