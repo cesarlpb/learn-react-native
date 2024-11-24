@@ -1,11 +1,12 @@
-import { Image, StyleSheet, SectionList } from 'react-native';
-import { HelloWave } from '@/components/HelloWave';
+import { useState } from 'react';
+
+import { StyleSheet, SectionList } from 'react-native';
+
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useEffect, useState } from 'react';
+
 import TaskList from '@/crud/TaskList';
 import TaskForm from '@/crud/TaskForm';
-import supabase from '../supabaseClient';
 
 // Define el tipo de las tareas
 interface Task {
