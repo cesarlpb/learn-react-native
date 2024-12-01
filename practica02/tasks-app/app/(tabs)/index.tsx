@@ -10,13 +10,9 @@ import TaskForm from '@/crud/TaskForm';
 
 import supabase from '@app/supabaseClient';
 
-// Define el tipo de las tareas
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+// Define el tipo de las tareas -> importamos desde Task.ts
+import Task from '@tasks/models/Task';
+
 
 interface TaskListProps {
   reload: boolean; // Asegúrate de que `reload` esté definido

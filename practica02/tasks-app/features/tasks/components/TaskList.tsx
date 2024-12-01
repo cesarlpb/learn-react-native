@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import supabase from '@core/supabase/client';
-import TaskForm from './TaskForm';
+import TaskForm from '@tasks/components/TaskForm';
 
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+// Define el tipo de las tareas -> importamos desde Task.ts
+import Task from '@tasks/models/Task';
 
 interface TaskListProps {
   reload: boolean; // Asegúrate de que `reload` esté definido

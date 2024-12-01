@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+// Define el tipo de las tareas -> importamos desde Task.ts
+import Task from '@tasks/models/Task';
 
 interface TaskFormProps {
   task?: Task; // Ahora es opcional

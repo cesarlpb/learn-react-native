@@ -13,6 +13,9 @@
       ],
       "@core/*": [
         "./core/*"
+      ],
+      "@tasks/*": [
+        "./features/tasks/*"
       ]
     }
   },
