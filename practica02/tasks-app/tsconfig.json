@@ -11,6 +11,9 @@
                   //       rutas relativas ../ al importar componentes dentro de
                   //       la carpeta app. Así las importaciones son más cortas.
       ],
+      "@components/*": [
+        "./components/*"
+      ],
       "@core/*": [
         "./core/*"
       ],

@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { StyleSheet, SectionList } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedView } from '@components/ThemedView';
 
-import TaskList from '@/crud/TaskList';
-import TaskForm from '@/crud/TaskForm';
+import TaskList from '@tasks/components/TaskList';
+import TaskForm from '@tasks/components/TaskForm';
 
-import supabase from '@app/supabaseClient';
+import supabase from '@core/supabase/client';
 
 // Define el tipo de las tareas -> importamos desde Task.ts
 import Task from '@tasks/models/Task';
