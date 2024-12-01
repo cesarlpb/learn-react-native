@@ -19,6 +19,9 @@
       ],
       "@tasks/*": [
         "./features/tasks/*"
+      ],
+      "@uploads/*": [
+        "./features/uploads/*"
       ]
     }
   },
