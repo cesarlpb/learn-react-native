@@ -57,8 +57,10 @@ const FileUploader = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#121212',
+    paddingHorizontal: 50,
+    paddingVertical: 25,
+    backgroundColor: '#505050', // colocamos el mismo color de fondo que el container de uploads para que no haya dos colores (cámbialo para ver cómo afecta)
+    width: '100%' // se usa todo el ancho, se usa el padding horizontal para separar el contenido interno de los bordes
   },
   button: {
     backgroundColor: '#007bff',
