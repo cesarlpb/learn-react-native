@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import supabase from '@app/supabaseClient';
+import supabase from '@core/supabase/client';
 import TaskForm from './TaskForm';
 
 interface Task {
