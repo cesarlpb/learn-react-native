@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Linking, Alert } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker'; import supabase from '@/core/supabase/client';
-import File from '@uploads/models/File';
+
+// import File from '@uploads/models/File';
 
 
 const FileUploader = () => {
   const [files, setFiles] = useState<string[]>([]);
+  const BASE_STORAGE_URL = process.env.EXPO_PUBLIC_BASE_BUCKET_URL;
 
   // Fetch files from Supabase storage
   const fetchFiles = async () => {
@@ -13,9 +15,31 @@ const FileUploader = () => {
     if (error) {
       console.error('Error fetching files:', error);
     } else {
-      setFiles(data.map((file) => file.name));
+      setFiles(data.map((file) => {
+        // console.log(file); // Para depuración
+        return file.name;  // Retorna el nombre del archivo
+      }));      
     }
   };
+
+  useEffect(() => {
+    fetchFiles();
+    console.log(`Archivos actualizados. Hay ${files.length} archivos en el bucket.`)
+  },[])
+
+  const openLink = async (url: string) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(`No se puede abrir la URL: ${url}`);
+      }
+    } catch (error) {
+      console.error('Error al intentar abrir la URL:', error);
+    }
+  }
 
   // Handle file upload
   const uploadFile = async () => {
@@ -48,6 +72,12 @@ const FileUploader = () => {
       {files.map((file, index) => (
         <Text key={index} style={styles.fileName}>
           {file}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => openLink(`${BASE_STORAGE_URL}/${file}`)}
+          >
+            <Text style={styles.buttonText}>Abrir Imagen</Text>
+          </TouchableOpacity>
         </Text>
       ))}
     </View>
@@ -68,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
+    marginLeft: 16,
   },
   title: {
     fontSize: 24,
