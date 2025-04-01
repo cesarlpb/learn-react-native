@@ -1,8 +1,8 @@
 # learn-react-native
 Repositorio para aprender React Native con backend de Supabase
 
-## Prácticas
+- Proyecto "reseteado" en [hola-mundo](./hola-mundo/)
+- Proyecto por defecto en [default](./default/)
 
-- Práctica 01 en [practica01](./practica01/)
-  - Guía en [guia](./practica01/guia/01.setup.md)
-  - Proyecto en [tasks-app](./practica01/tasks-app/)
+---
+
