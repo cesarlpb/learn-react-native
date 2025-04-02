@@ -3,7 +3,15 @@
 Apps para aprender React Native
 
 # Contador de clics
-Una app que muestra un número y permite incrementarlo o disminuirlo mediante botones. Es ideal para enseñar el manejo del estado y la renderización condicional.
+Una app que muestra un número y permite incrementarlo o disminuirlo mediante botones. 
+
+Es ideal para enseñar el manejo del estado y la renderización condicional.
+
+![contador app](image.png)
+
+- HTML + JS
+- React
+- React Native
 
 # Lista de tareas (To-Do App)
 Permite a los usuarios agregar, eliminar y marcar tareas como completadas. Con esta app se pueden introducir conceptos como el manejo de formularios, listas, eventos y persistencia de datos utilizando AsyncStorage.
