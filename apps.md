@@ -10,7 +10,7 @@ Es ideal para enseñar el manejo del estado y la renderización condicional.
 ![contador app](image.png)
 
 - [HTML + CSS + JS](https://github.com/cesarlpb/learn-js/tree/ux-ui/apps/0.counter)
-- React
+- [React](https://github.com/cesarlpb/learn-react/tree/ux-ui/apps/0.counter)
 - React Native
 
 # Lista de tareas (To-Do App)
