@@ -11,7 +11,7 @@ Es ideal para enseñar el manejo del estado y la renderización condicional.
 
 - [HTML + CSS + JS](https://github.com/cesarlpb/learn-js/tree/ux-ui/apps/0.counter)
 - [React](https://github.com/cesarlpb/learn-react/tree/ux-ui/apps/0.counter)
-- React Native
+- [React Native](./apps/0.counter/)
 
 # Lista de tareas (To-Do App)
 Permite a los usuarios agregar, eliminar y marcar tareas como completadas. Con esta app se pueden introducir conceptos como el manejo de formularios, listas, eventos y persistencia de datos utilizando AsyncStorage.
