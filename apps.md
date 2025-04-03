@@ -16,6 +16,12 @@ Es ideal para enseñar el manejo del estado y la renderización condicional.
 # Lista de tareas (To-Do App)
 Permite a los usuarios agregar, eliminar y marcar tareas como completadas. Con esta app se pueden introducir conceptos como el manejo de formularios, listas, eventos y persistencia de datos utilizando AsyncStorage.
 
+![alt text](image-1.png)
+
+- [HTML + CSS + JS](#)
+- [React](#)
+- [React Native](#)
+
 # Galería de imágenes
 Utilizando módulos como expo-image-picker (y opcionalmente expo-camera), los alumnos pueden aprender a acceder a la cámara o galería del dispositivo y mostrar imágenes en una cuadrícula. Es una buena forma de trabajar con APIs nativas de Expo.
 
