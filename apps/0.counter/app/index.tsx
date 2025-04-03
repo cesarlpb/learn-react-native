@@ -1,5 +1,5 @@
 
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
 import { useState } from "react";
 
 export default function Index() {
@@ -22,13 +22,20 @@ export default function Index() {
   }
   // Hasta aquí el código de React ^
   return (
-    <View style={styles.container}>
+    // Se puede dejar como <View> el container
+    <SafeAreaView style={styles.container}>
       <Text style={styles.h1}>Counter</Text>
-      <Text style={styles.display}>0</Text>
-      <Text style={styles.button} onPress={handleIncrement}>Incrementar</Text>
-      <Text style={styles.button} onPress={handleDecrement}>Decrementar</Text>
-      <Text style={[styles.button, styles.resetButton]} onPress={handleReset}>Reiniciar</Text>
-    </View>
+      <Text style={styles.display}>{counter}</Text>
+      <TouchableOpacity style={styles.button} onPress={handleIncrement}>
+        <Text style={styles.buttonText}>Incrementar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleDecrement}>
+        <Text style={styles.buttonText}>Decrementar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={handleReset}>
+        <Text style={styles.buttonText} onPress={handleReset}>Reiniciar</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 
@@ -66,6 +73,10 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     width: 150,
     textAlign: 'center'
+  },
+  buttonText: {
+    textAlign: 'center',
+    fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
   },
   resetButton: {
     backgroundColor: 'red'
