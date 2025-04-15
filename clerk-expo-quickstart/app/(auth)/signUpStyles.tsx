@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#22c55e',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -50,7 +50,8 @@ export const styles = StyleSheet.create({
   },
   footerLink: {
     fontSize: 14,
-    color: '#3b82f6',
+    color: '#22c55e',
     marginLeft: 6,
+    fontWeight: 500
   },
 });

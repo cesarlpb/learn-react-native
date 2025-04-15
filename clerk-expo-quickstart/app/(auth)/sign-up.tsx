@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useSignUp } from '@clerk/clerk-expo'
 import { Link, useRouter } from 'expo-router'
+import { styles } from './signUpStyles'
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp()
@@ -67,42 +68,48 @@ export default function SignUpScreen() {
 
   if (pendingVerification) {
     return (
-      <>
-        <Text>Verify your email</Text>
-        <TextInput value={code} placeholder="Enter your verification code" onChangeText={(code) => setCode(code)} />
-        <TouchableOpacity onPress={onVerifyPress}>
-          <Text>Verify</Text>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Verify your email</Text>
+        <TextInput
+          value={code}
+          placeholder="Enter your verification code"
+          onChangeText={(code) => setCode(code)}
+          style={styles.input}
+        />
+        <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
+          <Text style={styles.buttonText}>Verify</Text>
         </TouchableOpacity>
-      </>
+      </View>
     )
   }
 
   return (
-    <View>
-      <>
-        <Text>Sign up</Text>
-        <TextInput
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Enter email"
-          onChangeText={(email) => setEmailAddress(email)}
-        />
-        <TextInput
-          value={password}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <TouchableOpacity onPress={onSignUpPress}>
-          <Text>Continue</Text>
-        </TouchableOpacity>
-        <View style={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
-          <Text>Already have an account?</Text>
-          <Link href="/sign-in">
-            <Text>Sign in</Text>
-          </Link>
-        </View>
-      </>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Sign up</Text>
+      <TextInput
+        autoCapitalize="none"
+        value={emailAddress}
+        placeholder="Enter email"
+        onChangeText={(email) => setEmailAddress(email)}
+        style={styles.input}
+      />
+      <TextInput
+        value={password}
+        placeholder="Enter password"
+        secureTextEntry
+        onChangeText={(password) => setPassword(password)}
+        style={styles.input}
+      />
+      <TouchableOpacity onPress={onSignUpPress} style={styles.button}>
+        <Text style={styles.buttonText}>Continue</Text>
+      </TouchableOpacity>
+
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>Already have an account?</Text>
+        <Link href="/sign-in">
+          <Text style={styles.footerLink}>Sign in</Text>
+        </Link>
+      </View>
     </View>
-  )
+  ) 
 }
