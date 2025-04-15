@@ -17,6 +17,9 @@ export default function Page() {
       </SignedIn>
 
       <SignedOut>
+        <Text style={styles.text}>
+          Welcome! 🙃
+        </Text>
         <Link href="/(auth)/sign-in">
           <Text style={[styles.link, styles.signIn]}>Sign in</Text>
         </Link>
