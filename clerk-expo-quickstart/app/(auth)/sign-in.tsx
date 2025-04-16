@@ -2,7 +2,7 @@ import { useSignIn } from '@clerk/clerk-expo'
 import { Link, useRouter } from 'expo-router'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { styles } from './signInstyles'
+import { styles } from './signInStyles'
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn()
