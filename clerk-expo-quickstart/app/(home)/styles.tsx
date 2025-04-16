@@ -1,10 +1,8 @@
-// styles.js o dentro del mismo archivo
-
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,                    // Ocupa toda la pantalla
+    flex: 1,                   // Ocupa toda la pantalla
     justifyContent: 'center',  // Centra verticalmente
     alignItems: 'center',      // Centra horizontalmente
     padding: 20,
